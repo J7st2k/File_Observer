@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <QDir>
-#include <iostream>
 #include <QDebug>
+#include "Statistics.h"
 
 void setItems(QString const& path, int level = 0)
 {
@@ -21,26 +21,6 @@ void setItems(QString const& path, int level = 0)
         }
         qDebug() << "Level " << level << " " << fullPathName;
     }
-}
-
-int CountDir(const QString& path)
-{
-    int res = 0;
-    QDir dir = path;
-    QFileInfoList fileInfo = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
-    QFileInfoList folderInfo = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (int i = 0; i < folderInfo.size(); i++) {
-        QFileInfo folderI = folderInfo.at(i);
-        res += CountDir(folderI.filePath());
-        // std::cout << qPrintable(folderI.filePath()) << std::endl;
-
-        // std::cout << qPrintable(folderI.path() + QDir::separator() + folderI.fileName()) << std::endl;
-    }
-    for (int i = 0; i < fileInfo.size(); i++) {
-        QFileInfo fileI = fileInfo.at(i);
-        res += fileI.size();
-    }
-    return res;
 }
 
 int main(int argc, char *argv[])
@@ -90,6 +70,16 @@ entryInfoList,
     }
     std::cout << qPrintable(res);
     setItems(info);
-    std::cout << CountDir(info);
+    Statistics* _class = new fileStatistics(info);
+    _class->FillMap();
+    QMap<QString, QString> map = _class->GetMap();
+    QTextStream cout(stdout);
+    if(!map.empty()) {
+        QMapIterator<QString, QString> i(map);
+        while(i.hasNext()) {
+            i.next();
+            cout << i.key() << QString(": ") << i.value() << Qt::endl;
+        }
+    }
     return a.exec();
 }
