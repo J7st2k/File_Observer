@@ -21,9 +21,21 @@ class fileStatistics : public Statistics
 {
 public:
     fileStatistics(const QString& Core):Statistics(Core) {}
+    ~fileStatistics();
     void FillMap();
 private:
     int CountDir(const QString& path);
+};
+
+class formatStatistics : public Statistics
+{
+    QMap<QString, int> memory;
+public:
+    formatStatistics(const QString& Core):Statistics(Core) {}
+    ~formatStatistics() { memory.clear(); }
+    void FillMap();
+private:
+    void CountFormat(const QString &path);
 };
 
 #endif // STATISTICS_H

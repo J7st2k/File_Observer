@@ -44,7 +44,7 @@ void fileStatistics::FillMap()
         tmp = CountDir(folderI.filePath())/overall;
         if (tmp != 0 && tmp < 0.01)
             map.insert(folderI.fileName(), QString("<0.01 \%"));
-        else map.insert(folderI.fileName(), QString::number(CountDir(folderI.filePath())/overall, 'f', 2) + QString(" \%"));
+        else map.insert(folderI.fileName(), QString::number(tmp, 'f', 2) + QString(" \%"));
     }
 }
 
@@ -53,3 +53,43 @@ const QMap<QString, QString>& Statistics::GetMap()
     return map;
 }
 
+void formatStatistics::FillMap()
+{
+    float total = 0;
+    float tmp = 0;
+    float othr = 0;
+    map.clear();
+    memory.clear();
+    CountFormat(core);
+    if(memory.empty()) return;
+    QMapIterator<QString, int> i(memory);
+    while(i.hasNext()) {
+        i.next();
+        total += i.value();
+    }
+    i.toFront();
+    while(i.hasNext()) {
+        i.next();
+        tmp = float(i.value())/total;
+        if (tmp < 0.01)
+            othr += tmp;
+        else map.insert(QString("*.") + i.key(), QString::number(tmp, 'f', 2) + QString(" \%"));
+    }
+    map.insert(QString("Others"), QString::number(othr, 'f', 2) + QString(" \%"));
+}
+
+void formatStatistics::CountFormat(const QString &path) {
+    if(path.isEmpty()) return;
+    if(!QFileInfo(path).isDir()) return;
+    QDir dir = path;
+    QFileInfoList fileInfo = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    QFileInfoList folderInfo = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (int i = 0; i < folderInfo.size(); i++) {
+        QFileInfo folderI = folderInfo.at(i);
+        CountFormat(folderI.filePath());
+    }
+    for (int i = 0; i < fileInfo.size(); i++) {
+        QFileInfo fileI = fileInfo.at(i);
+        memory[fileI.completeSuffix()] += fileI.size();
+    }
+}
