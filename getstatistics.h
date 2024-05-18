@@ -2,13 +2,16 @@
 #define GETSTATISTICS_H
 #include "Statistics.h"
 #include <memory>
+#include <stdexcept>
 
 class GetStatistics
 {
+    QMap<QString, QString> map;
+    QString core;
 public:
-    GetStatistics(const std::shared_ptr<Statistics>& stat);
+    GetStatistics(QString& Core, const std::shared_ptr<Statistics>& stat);
     ~GetStatistics() = default;
-    void setStrategy(const std::shared_ptr<Statistics>& stat) { if(stat) p = stat; }
+    void setStrategy(const std::shared_ptr<Statistics>& stat);
     void FillMap();
     const QMap<QString, QString>& GetMap();
 private:
