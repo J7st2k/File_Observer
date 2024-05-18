@@ -7,35 +7,27 @@
 
 class Statistics
 {
-protected:
-    QMap<QString, QString> map;
-    QString core;
 public:
-    Statistics(const QString& Core):core(Core) {}
-    ~Statistics() { map.clear(); }
-    virtual void FillMap() = 0;
-    const QMap<QString, QString>& GetMap();
+    ~Statistics() = default;
+    virtual void FillMap(QMap<QString, QString>& map, const QString& core) = 0;
 };
 
 class fileStatistics : public Statistics
 {
 public:
-    fileStatistics(const QString& Core):Statistics(Core) {}
     ~fileStatistics() = default;
-    void FillMap();
+    void FillMap(QMap<QString, QString>& map, const QString& core);
 private:
     int CountDir(const QString& path);
 };
 
 class formatStatistics : public Statistics
 {
-    QMap<QString, int> memory;
 public:
-    formatStatistics(const QString& Core):Statistics(Core) {}
-    ~formatStatistics() { memory.clear(); }
-    void FillMap();
+    ~formatStatistics() = default;
+    void FillMap(QMap<QString, QString>& map, const QString& core);
 private:
-    void CountFormat(const QString &path);
+    void CountFormat(const QString &path, QMap<QString, int>& memory);
 };
 
 #endif // STATISTICS_H

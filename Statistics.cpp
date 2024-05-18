@@ -21,7 +21,7 @@ int fileStatistics::CountDir(const QString &path)
     return res;
 }
 
-void fileStatistics::FillMap()
+void fileStatistics::FillMap(QMap<QString, QString>& map, const QString& core)
 {
     map.clear();
     float res = 0;
@@ -48,19 +48,14 @@ void fileStatistics::FillMap()
     }
 }
 
-const QMap<QString, QString>& Statistics::GetMap()
-{
-    return map;
-}
-
-void formatStatistics::FillMap()
+void formatStatistics::FillMap(QMap<QString, QString>& map, const QString& core)
 {
     float total = 0;
     float tmp = 0;
     float othr = 0;
+    QMap<QString, int> memory;
     map.clear();
-    memory.clear();
-    CountFormat(core);
+    CountFormat(core, memory);
     if(memory.empty()) return;
     QMapIterator<QString, int> i(memory);
     while(i.hasNext()) {
@@ -78,7 +73,7 @@ void formatStatistics::FillMap()
     map.insert(QString("Others"), QString::number(othr, 'f', 2) + QString(" \%"));
 }
 
-void formatStatistics::CountFormat(const QString &path) {
+void formatStatistics::CountFormat(const QString &path, QMap<QString, int>& memory) {
     if(path.isEmpty()) return;
     if(!QFileInfo(path).isDir()) return;
     QDir dir = path;
@@ -86,7 +81,7 @@ void formatStatistics::CountFormat(const QString &path) {
     QFileInfoList folderInfo = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     for (int i = 0; i < folderInfo.size(); i++) {
         QFileInfo folderI = folderInfo.at(i);
-        CountFormat(folderI.filePath());
+        CountFormat(folderI.filePath(), memory);
     }
     for (int i = 0; i < fileInfo.size(); i++) {
         QFileInfo fileI = fileInfo.at(i);

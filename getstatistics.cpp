@@ -1,16 +1,21 @@
 #include "getstatistics.h"
 
 
-GetStatistics::GetStatistics(const std::shared_ptr<Statistics> &stat) {
-    if(stat) p = stat;
+GetStatistics::GetStatistics(QString& Core, const std::shared_ptr<Statistics> &stat):core(Core) {
+    if(!stat) throw std::runtime_error("Error in strategy pointer");
+    p = stat;
+}
+
+void GetStatistics::setStrategy(const std::shared_ptr<Statistics> &stat) {
+    if(!stat) throw std::runtime_error("Error in strategy pointer");
+    p = stat;
 }
 
 void GetStatistics::FillMap() {
-    if(!p) return;
-    p->FillMap();
+    p->FillMap(map, core);
 }
 
 const QMap<QString, QString> &GetStatistics::GetMap()
-{   if(!p) return QMap<QString, QString> emptyMap;
-    return p->GetMap();
+{
+    return map;
 }

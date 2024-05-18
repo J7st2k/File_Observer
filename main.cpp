@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
     //info = myDir.path();
     info = QString("D:\\Games");
     std::cout << "Folders:\n";
-    GetStatistics g(std::make_shared<fileStatistics>(info));
+    GetStatistics g(info, std::make_shared<fileStatistics>());
     g.FillMap();
     printMap(g.GetMap());
     std::cout << "Formats:\n";
-    g.setStrategy(std::make_shared<formatStatistics>(info));
+    g.setStrategy(std::make_shared<formatStatistics>());
     g.FillMap();
     printMap(g.GetMap());
     return a.exec();
