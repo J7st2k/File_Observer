@@ -21,7 +21,7 @@ class fileStatistics : public Statistics
 {
 public:
     fileStatistics(const QString& Core):Statistics(Core) {}
-    ~fileStatistics();
+    ~fileStatistics() = default;
     void FillMap();
 private:
     int CountDir(const QString& path);
