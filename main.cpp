@@ -1,7 +1,8 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
-#include "Statistics.h"
+#include "getstatistics.h"
+
 
 void printMap(const QMap<QString, QString> map) {
     QTextStream cout(stdout);
@@ -20,19 +21,15 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QDir myDir;
     QString info;
-    info = myDir.path();
+    //info = myDir.path();
     info = QString("D:\\Games");
-
-    Statistics* _class = new fileStatistics(info);
-    _class->FillMap();
-    QMap<QString, QString> map = _class->GetMap();
     std::cout << "Folders:\n";
-    printMap(map);
-    delete _class;
-    _class = new formatStatistics(info);
-    _class->FillMap();
-    QMap<QString, QString> testmap = _class->GetMap();
+    GetStatistics g(std::make_shared<fileStatistics>(info));
+    g.FillMap();
+    printMap(g.GetMap());
     std::cout << "Formats:\n";
-    printMap(testmap);
+    g.setStrategy(std::make_shared<formatStatistics>(info));
+    g.FillMap();
+    printMap(g.GetMap());
     return a.exec();
 }
