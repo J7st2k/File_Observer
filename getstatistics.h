@@ -6,7 +6,7 @@
 class GetStatistics
 {
 public:
-    GetStatistics(const std::shared_ptr<Statistics>& stat) { if(stat) p = stat; }
+    GetStatistics(const std::shared_ptr<Statistics>& stat);
     ~GetStatistics() = default;
     void setStrategy(const std::shared_ptr<Statistics>& stat) { if(stat) p = stat; }
     void FillMap();
