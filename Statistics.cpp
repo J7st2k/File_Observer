@@ -39,19 +39,13 @@ void fileStatistics::FillMap(QMap<QString, QString>& map, const QString& core)
         res += fileI.size();
     }
     float tmp = res/overall;
-    // if(tmp == 1) {
-    //     map.insert("*Current path*", QString("100.00 \%"));
-    //     return;
-    // }
     if (tmp != 0 && tmp < 0.01)
         map.insert("*Current path*", QString("<0.01 \%"));
     else map.insert("*Current path*", QString::number(tmp*100, 'f', 2) + QString(" \%"));
     for (int i = 0; i < folderInfo.size(); i++) {
         QFileInfo folderI = folderInfo.at(i);
         tmp = CountDir(folderI.filePath())/overall;
-        if (tmp == 1)
-            map.insert(folderI.fileName(), QString("100.00 \%"));
-        else if (tmp != 0 && tmp < 0.01)
+        if (tmp != 0 && tmp < 0.01)
             map.insert(folderI.fileName(), QString("<0.01 \%"));
         else map.insert(folderI.fileName(), QString::number(tmp*100, 'f', 2) + QString(" \%"));
     }
