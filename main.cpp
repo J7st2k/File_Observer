@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     QDir myDir;
     QString info;
     //info = myDir.path();
-    info = QString("D:\\Games");
+    info = QString("D:\\Games\\folderWithNothing");
     std::cout << "Folders:\n";
     GetStatistics g(info, std::make_shared<fileStatistics>());
     g.FillMap();
