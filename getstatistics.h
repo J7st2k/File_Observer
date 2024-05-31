@@ -6,14 +6,13 @@
 
 class GetStatistics
 {
-    QMap<QString, QString> map;
-    QString core;
+    QMap<QString, int> map;
 public:
-    GetStatistics(QString& Core, const std::shared_ptr<Statistics>& stat);
+    GetStatistics(const std::shared_ptr<Statistics>& stat);
     ~GetStatistics() = default;
     void setStrategy(const std::shared_ptr<Statistics>& stat);
-    void FillMap();
-    const QMap<QString, QString>& GetMap();
+    void FillMap(const QString& Core);
+    const QMap<QString, int>& GetMap();
 private:
     std::shared_ptr<Statistics> p;
 };
