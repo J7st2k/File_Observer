@@ -9,14 +9,14 @@ class Statistics
 {
 public:
     ~Statistics() = default;
-    virtual void FillMap(QMap<QString, QString>& map, const QString& core) = 0;
+    virtual void FillMap(QMap<QString, int>& map, const QString& core) = 0;
 };
 
 class fileStatistics : public Statistics
 {
 public:
     ~fileStatistics() = default;
-    void FillMap(QMap<QString, QString>& map, const QString& core);
+    void FillMap(QMap<QString, int>& map, const QString& core);
 private:
     int CountDir(const QString& path);
 };
@@ -25,7 +25,7 @@ class formatStatistics : public Statistics
 {
 public:
     ~formatStatistics() = default;
-    void FillMap(QMap<QString, QString>& map, const QString& core);
+    void FillMap(QMap<QString, int>& map, const QString& core);
 private:
     void CountFormat(const QString &path, QMap<QString, int>& memory);
 };
