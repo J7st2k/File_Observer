@@ -69,7 +69,9 @@ QMap<QString, QString>* countPercent(const QMap<QString, int>& memory, int type,
         while(i.hasNext()) {
             i.next();
             tmp = float(i.value())/total;
-            if (tmp < border)
+            if(tmp == 0)
+                map->insert(i.key(), QString("0.00 \%"));
+            else if(tmp < border)
                 map->insert(i.key(), QString("<%1 \%").arg(QString::number(border)));
             else map->insert(i.key(), QString("%1 \%").arg(QString::number(tmp*100, 'f', 2)));
         }
@@ -82,11 +84,22 @@ QMap<QString, QString>* countPercent(const QMap<QString, int>& memory, int type,
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QDir myDir;
     QString info;
-    //info = myDir.path();
-    info = QString("D:\\Games\\EmptyFolder");
 
+    //Папка пустая
+    //info = QString("...\\File_Observer\\tests\\EmptyFolder");
+
+    //Папка содержит пустые типы данных
+    //info = QString("...\\File_Observer\\tests\\notEmpty");
+
+    //Папка не пустая и не содержит вложения
+    //info = QString("...\\File_Observer\\tests\\folderWithSmth");
+
+    //Папка не пустая и содержит вложения
+    //info = QString("...\\File_Observer\\tests");
+
+    //Папка пустая и содержит вложения
+    //info = QString("...\\File_Observer\\tests\\folderWithNothing");
 
     GetStatistics g(std::make_shared<fileStatistics>());
     g.FillMap(info);
@@ -100,7 +113,7 @@ int main(int argc, char *argv[])
     g.FillMap(info);
     // std::cout << "Formats raw:\n";
     // printMap(g.GetMap());
-    std::cout << "Formats percent:\n";
+    std::cout << "\nFormats percent:\n";
     printMap(countPercent(g.GetMap(), 2));
 
 
