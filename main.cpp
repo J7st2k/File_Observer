@@ -1,6 +1,10 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDir>
 #include <QDebug>
+#include <QFileSystemModel>
+#include <QTreeView>
+#include <QListView>
+#include <QHeaderView>
 #include "getstatistics.h"
 
 
@@ -83,7 +87,7 @@ QMap<QString, QString>* countPercent(const QMap<QString, int>& memory, int type,
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
     QString info;
 
     //Папка пустая
@@ -96,7 +100,7 @@ int main(int argc, char *argv[])
     //info = QString("...\\File_Observer\\tests\\folderWithSmth");
 
     //Папка не пустая и содержит вложения
-    //info = QString("...\\File_Observer\\tests");
+    //info = QString("D:\\qt\\File_Observer\\tests");
 
     //Папка пустая и содержит вложения
     //info = QString("...\\File_Observer\\tests\\folderWithNothing");
@@ -116,6 +120,25 @@ int main(int argc, char *argv[])
     std::cout << "\nFormats percent:\n";
     printMap(countPercent(g.GetMap(), 2));
 
+    QFileSystemModel *model = new QFileSystemModel;
+    model->setRootPath("D:\\qt\\File_Observer\\tests");
+    model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+    //Показать как дерево, пользуясь готовым видом:
+    QTreeView *tree = new QTreeView();
+    tree->setModel(model);
+    tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tree->setRootIndex(model->index("D:\\qt\\File_Observer\\tests"));
+    tree->hideColumn(1);
+    tree->hideColumn(2);
+    tree->hideColumn(3);
+    //берем данные только через модель!
+    tree->show();
+    //Показать как список, пользуясь готовым видом:
+    // QListView *list = new QListView();
+    // list->setModel(model);
+    // list->setRootIndex(model->index(QDir::currentPath()));
+    // list->show();
+    //так как не размещаем компоненты, будет в новом окне
 
     return a.exec();
 }
