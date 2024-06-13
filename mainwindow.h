@@ -13,14 +13,14 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private slots:
-
     void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-
+signals:
+    upd_signal(const QMap<QString, QString>& _map);
 public:
     MainWindow(QWidget *parent = 0, GetStatistics *_context = nullptr);
     ~MainWindow();
 private:
-    QFileSystemModel *fileModel;
+    FileExplorerModel *fileModel;
     QFileSystemModel *dirModel;
     QTreeView *treeView;
     QTableView *tableView;

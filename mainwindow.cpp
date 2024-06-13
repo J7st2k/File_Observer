@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     // Определим  файловой системы:
     dirModel =  new QFileSystemModel(this);
     dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-    dirModel->setRootPath(homePath);
+    dirModel->setRootPath("D:\\qt\\File_Observer\\tests");
 
     // fileModel = new QFileSystemModel(this);
     // fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
@@ -87,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
     treeView->header()->resizeSection(0, 200);
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
-    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
-    //connect(selectionModel, &QItemSelectionModel::selectionChanged, fileModel, &FileExplorerModel::UpdateMap);
+    QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
+    QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
     //Пример организации установки курсора в TreeView относительно модельного индекса
     QItemSelection toggleSelection;
     QModelIndex topLeft;
@@ -116,6 +116,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
+        emit upd_signal(*context->GetCountPercent(2));
     }
 
     //TODO: !!!!!
