@@ -6,7 +6,7 @@
 #include <QListView>
 #include <QHeaderView>
 #include "getstatistics.h"
-
+#include "mainwindow.h"
 
 void printMap(const QMap<QString, int> map) {
     QTextStream cout(stdout);
@@ -120,25 +120,8 @@ int main(int argc, char *argv[])
     std::cout << "\nFormats percent:\n";
     printMap(countPercent(g.GetMap(), 2));
 
-    QFileSystemModel *model = new QFileSystemModel;
-    model->setRootPath("D:\\qt\\File_Observer\\tests");
-    model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-    //Показать как дерево, пользуясь готовым видом:
-    QTreeView *tree = new QTreeView();
-    tree->setModel(model);
-    tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    tree->setRootIndex(model->index("D:\\qt\\File_Observer\\tests"));
-    tree->hideColumn(1);
-    tree->hideColumn(2);
-    tree->hideColumn(3);
-    //берем данные только через модель!
-    tree->show();
-    //Показать как список, пользуясь готовым видом:
-    // QListView *list = new QListView();
-    // list->setModel(model);
-    // list->setRootIndex(model->index(QDir::currentPath()));
-    // list->show();
-    //так как не размещаем компоненты, будет в новом окне
+    MainWindow w;
+    w.show();
 
     return a.exec();
 }
