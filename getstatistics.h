@@ -13,6 +13,7 @@ public:
     void setStrategy(const std::shared_ptr<Statistics>& stat);
     void FillMap(const QString& Core);
     const QMap<QString, int>& GetMap();
+    QMap<QString, QString>* GetCountPercent(int type, float border = 0.01);
 private:
     std::shared_ptr<Statistics> p;
 };

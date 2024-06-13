@@ -11,10 +11,13 @@
 #include <QStatusBar>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     : //QWidget(parent)
     QMainWindow(parent)
 {
+    if (!_context)
+        throw std::runtime_error("Error in context pointer");
+    context = _context;
     //Устанавливаем размер главного окна
     this->setGeometry(100, 100, 1500, 500);
     this->setStatusBar(new QStatusBar(this));
@@ -25,10 +28,12 @@ MainWindow::MainWindow(QWidget *parent)
     dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     dirModel->setRootPath(homePath);
 
-    fileModel = new QFileSystemModel(this);
-    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    // fileModel = new QFileSystemModel(this);
+    // fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
-    fileModel->setRootPath(homePath);
+    // fileModel->setRootPath(homePath);
+
+    fileModel = new FileExplorerModel(this);
     //Показать как дерево, пользуясь готовым видом:
 
     treeView = new QTreeView();
@@ -82,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     treeView->header()->resizeSection(0, 200);
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
-    connect(selectionModel, SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(on_selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
+    //connect(selectionModel, &QItemSelectionModel::selectionChanged, fileModel, &FileExplorerModel::UpdateMap);
     //Пример организации установки курсора в TreeView относительно модельного индекса
     QItemSelection toggleSelection;
     QModelIndex topLeft;
@@ -110,6 +115,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         QModelIndex ix =  indexs.constFirst();
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
+        context->FillMap(dirModel->filePath(indexs.constFirst()));
     }
 
     //TODO: !!!!!
