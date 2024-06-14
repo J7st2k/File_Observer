@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     std::cout << "\nFormats percent:\n";
     printMap(g.GetCountPercent(2));
 
-
+    g.setStrategy(std::make_shared<fileStatistics>());
     MainWindow w(0, &g);
     w.show();
 

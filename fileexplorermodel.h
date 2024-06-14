@@ -3,14 +3,15 @@
 #include <QFileSystemModel>
 #include <QMap>
 #include <QObject>
+#include <QDebug>
 
 class FileExplorerModel: public QFileSystemModel
 {
     Q_OBJECT
 
-    QMapIterator<QString, QString>& GetIterator(QMapIterator<QString, QString>& i, int pos) const;
+    void GetIterator(QMapIterator<QString, QString>& i, int pos) const;
 public:
-    FileExplorerModel(QObject *parent = nullptr);
+    FileExplorerModel(QObject *parent = nullptr, QMap<QString, QString> *_map = nullptr);
     virtual int columnCount(const QModelIndex &parent) const override;
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

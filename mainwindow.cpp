@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
     // fileModel->setRootPath(homePath);
 
-    fileModel = new FileExplorerModel(this);
+    fileModel = new FileExplorerModel(this, context->GetCountPercent(2));
     //Показать как дерево, пользуясь готовым видом:
 
     treeView = new QTreeView();
@@ -116,7 +116,15 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
-        emit upd_signal(*context->GetCountPercent(2));
+        //emit upd_signal(*context->GetCountPercent(2));
+
+        tableView->setModel(nullptr);
+        delete fileModel;
+        fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
+        tableView->setModel(fileModel);
+        tableView->update();
+        qDebug() << QString(dirModel->filePath(indexs.constFirst()));
+        printMap(context->GetCountPercent(1));
     }
 
     //TODO: !!!!!
