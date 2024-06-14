@@ -9,7 +9,7 @@ class FileExplorerModel: public QFileSystemModel
 {
     Q_OBJECT
 
-    void GetIterator(QMapIterator<QString, QString>& i, int pos) const;
+    void MoveIterator(QMapIterator<QString, QString>& i, int pos) const;
 public:
     FileExplorerModel(QObject *parent = nullptr, QMap<QString, QString> *_map = nullptr);
     virtual int columnCount(const QModelIndex &parent) const override;

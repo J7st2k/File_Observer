@@ -42,8 +42,8 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
     }
     if (map.isEmpty()) return QVariant();
     QMapIterator<QString, QString> i(map);
-    qDebug() << QString("WHY&&&&&  ") + QString::number(index.row()) + QString(" ") + QString::number(index.column());
-    GetIterator(i, index.row());
+    qDebug() << QString("indexes:  ") + QString::number(index.row()) + QString(" ") + QString::number(index.column());
+    MoveIterator(i, index.row());
         if (index.column() == 0) {
         return i.key();
     } else if (index.column() == 1) {
@@ -51,7 +51,7 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
     }
 }
 
-void FileExplorerModel::GetIterator(QMapIterator<QString, QString> &i, int pos) const
+void FileExplorerModel::MoveIterator(QMapIterator<QString, QString> &i, int pos) const
 {
     int k = 0;
     i.next();

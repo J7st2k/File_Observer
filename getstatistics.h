@@ -8,14 +8,20 @@ class GetStatistics
 {
     QMap<QString, int> map;
 public:
-    GetStatistics(const std::shared_ptr<Statistics>& stat);
+    enum StrategyType {
+        FOLDER = 1,
+        FILE = 2
+    };
+
+    GetStatistics(const std::shared_ptr<Statistics>& stat, StrategyType _type);
     ~GetStatistics() = default;
-    void setStrategy(const std::shared_ptr<Statistics>& stat);
+    void setStrategy(const std::shared_ptr<Statistics>& stat, StrategyType _type);
     void FillMap(const QString& Core);
     const QMap<QString, int>& GetMap();
-    QMap<QString, QString>* GetCountPercent(int type, float border = 0.01);
+    QMap<QString, QString>* GetCountPercent(float border = 0.01);
 private:
     std::shared_ptr<Statistics> p;
+    StrategyType type;
 };
 
 #endif // GETSTATISTICS_H

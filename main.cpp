@@ -37,7 +37,7 @@ void printMap(QMap<QString, QString>* map) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QString info;
+    // QString info;
 
     //Папка пустая
     //info = QString("...\\File_Observer\\tests\\EmptyFolder");
@@ -54,22 +54,22 @@ int main(int argc, char *argv[])
     //Папка пустая и содержит вложения
     //info = QString("...\\File_Observer\\tests\\folderWithNothing");
 
-    GetStatistics g(std::make_shared<fileStatistics>());
-    g.FillMap(info);
-    // std::cout << "Folders raw:\n";
-    // printMap(g.GetMap());
-    std::cout << "Folders percent:\n";
-    printMap(g.GetCountPercent(1));
+    GetStatistics g(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
+    // g.FillMap(info);
+    // // std::cout << "Folders raw:\n";
+    // // printMap(g.GetMap());
+    // std::cout << "Folders percent:\n";
+    // printMap(g.GetCountPercent());
 
 
-    g.setStrategy(std::make_shared<formatStatistics>());
-    g.FillMap(info);
-    // std::cout << "Formats raw:\n";
-    // printMap(g.GetMap());
-    std::cout << "\nFormats percent:\n";
-    printMap(g.GetCountPercent(2));
+    // g.setStrategy(std::make_shared<formatStatistics>(), GetStatistics::FILE);
+    // g.FillMap(info);
+    // // std::cout << "Formats raw:\n";
+    // // printMap(g.GetMap());
+    // std::cout << "\nFormats percent:\n";
+    // printMap(g.GetCountPercent());
 
-    g.setStrategy(std::make_shared<fileStatistics>());
+    // g.setStrategy(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
     MainWindow w(0, &g);
     w.show();
 

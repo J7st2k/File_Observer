@@ -1,13 +1,19 @@
 #include "getstatistics.h"
 
 
-GetStatistics::GetStatistics(const std::shared_ptr<Statistics> &stat) {
+GetStatistics::GetStatistics(const std::shared_ptr<Statistics> &stat, StrategyType _type) {
     if(!stat) throw std::runtime_error("Error in strategy pointer");
     p = stat;
+    if(_type < 1) type = FILE;
+    else if (_type > 2) type = FOLDER;
+    else type = _type;
 }
 
-void GetStatistics::setStrategy(const std::shared_ptr<Statistics> &stat) {
+void GetStatistics::setStrategy(const std::shared_ptr<Statistics> &stat, StrategyType _type) {
     if(stat) p = stat;
+    if(_type < 1) type = FILE;
+    else if (_type > 2) type = FOLDER;
+    else type = _type;
 }
 
 void GetStatistics::FillMap(const QString& Core) {
@@ -19,7 +25,7 @@ const QMap<QString, int> &GetStatistics::GetMap()
     return map;
 }
 
-QMap<QString, QString> *GetStatistics::GetCountPercent(int type, float border) {
+QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
     float total = 0;
     float tmp = 0;
     bool flag = false;
@@ -33,7 +39,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(int type, float border) {
         total += i.value();
     }
     i.toFront();
-    if(type == 2) {
+    if(type == FILE) {
         if(total == 0) {
             while(i.hasNext()) {
                 i.next();
@@ -45,7 +51,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(int type, float border) {
         while(i.hasNext()) {
             i.next();
             tmp = float(i.value())/total;
-            if (tmp < border) {
+            if (tmp*100 < border) {
                 othr += tmp;
                 flag = true;
             }
@@ -53,7 +59,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(int type, float border) {
         }
         if (flag)
             _map->insert(QString("Others"), QString::number(othr*100, 'f', 2) + QString(" \%"));
-    } else if (type == 1) {
+    } else if (type == FOLDER) {
         if(total == 0) {
             _map->insert("*Current path*", QString("0.00 \%"));
             return _map;
@@ -63,7 +69,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(int type, float border) {
             tmp = float(i.value())/total;
             if(tmp == 0)
                 _map->insert(i.key(), QString("0.00 \%"));
-            else if(tmp < border)
+            else if(tmp*100 < border)
                 _map->insert(i.key(), QString("<%1 \%").arg(QString::number(border)));
             else _map->insert(i.key(), QString("%1 \%").arg(QString::number(tmp*100, 'f', 2)));
         }

@@ -48,44 +48,10 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     setCentralWidget(splitter);
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
-    // QModelIndex rootIx = dirModel->index(0, 0, QModelIndex());//корневой элемент
-
-    // QModelIndex indexHomePath = dirModel->index(homePath);
-    // QFileInfo fileInfo = dirModel->fileInfo(indexHomePath);
-
-    // /* Рассмотрим способы обхода содержимого папок на диске.
-    //  * Предлагается вариант решения, которы может быть применен для более сложных задач.
-    //  * Итак, если требуется выполнить анализ содержимого папки, то необходимо организовать обход содержимого. Обход выполняем относительно модельного индекса.
-    //  * Например:*/
-    // if (fileInfo.isDir()) {
-    // 	/*
-    // 	 * Если fileInfo папка то заходим в нее, что бы просмотреть находящиеся в ней файлы.
-    // 	 * Если нужно просмотреть все файлы, включая все вложенные папки, то нужно организовать рекурсивный обход.
-    // 	*/
-    // 	QDir dir  = fileInfo.dir();
-
-    // 	if (dir.cd(fileInfo.fileName())) {
-    // 		/**
-    // 		 * Если зашли в папку, то пройдемся по контейнеру QFileInfoList ,полученного методом entryInfoList,
-    // 		 * */
-
-    // 		foreach (QFileInfo inf, dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Type)) {
-    // 			qDebug() << inf.fileName() << "---" << inf.size();
-    // 		}
-
-    // 		dir.cdUp();//выходим из папки
-    // 	}
-    // }
-
-    // QDir dir = fileInfo.dir();
-
-    // foreach (QFileInfo inf, dir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Type)) {
-
-    // 	qDebug() << inf.fileName() << "---" << inf.size();
-    // }
 
 
-    treeView->header()->resizeSection(0, 200);
+    treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
     QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
@@ -105,7 +71,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 {
     //Q_UNUSED(selected);
     Q_UNUSED(deselected);
-    QModelIndex index = treeView->selectionModel()->currentIndex();
+    //QModelIndex index = treeView->selectionModel()->currentIndex();
     QModelIndexList indexs =  selected.indexes();
     QString filePath = "";
 
@@ -116,15 +82,15 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
-        //emit upd_signal(*context->GetCountPercent(2));
+        emit upd_signal(*context->GetCountPercent());
 
-        tableView->setModel(nullptr);
-        delete fileModel;
-        fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
-        tableView->setModel(fileModel);
-        tableView->update();
-        qDebug() << QString(dirModel->filePath(indexs.constFirst()));
-        printMap(context->GetCountPercent(1));
+        // tableView->setModel(nullptr);
+        // delete fileModel;
+        // fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
+        // tableView->setModel(fileModel);
+        // tableView->update();
+        //qDebug() << QString(dirModel->filePath(indexs.constFirst()));
+        //printMap(context->GetCountPercent(1));
     }
 
     //TODO: !!!!!
@@ -134,7 +100,6 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
     Требуется доработка(переработка).
     */
 
-    treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableView->setRootIndex(fileModel->setRootPath(filePath));
 }
 
