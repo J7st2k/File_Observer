@@ -40,13 +40,29 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     treeView = new QTreeView();
     treeView->setModel(dirModel);
 
+    box = new QComboBox(parent);
+    box->addItem("Folder");
+    box->addItem("File");
+    box->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+
     treeView->expandAll();
-    QSplitter *splitter = new QSplitter(parent);
+    QSplitter *hsplitter = new QSplitter(parent);
     tableView = new QTableView;
     tableView->setModel(fileModel);
-    splitter->addWidget(treeView);
-    splitter->addWidget(tableView);
-    setCentralWidget(splitter);
+    hsplitter->addWidget(treeView);
+    hsplitter->addWidget(tableView);
+
+    QSplitter *vsplitter = new QSplitter(Qt::Vertical, parent);
+    vsplitter->addWidget(box);
+    vsplitter->addWidget(hsplitter);
+
+
+    // QVBoxLayout* layout = new QVBoxLayout(this);
+    // layout->addWidget(box);
+    // layout->addWidget(splitter);
+    // layout->addStretch();
+
+    setCentralWidget(vsplitter);
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
 
@@ -56,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
     QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
+    QObject::connect(box, &QComboBox::currentTextChanged, this, &MainWindow::on_boxChanged);
     //Пример организации установки курсора в TreeView относительно модельного индекса
     QItemSelection toggleSelection;
     QModelIndex topLeft;
@@ -83,7 +100,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
-        emit upd_signal(*context->GetCountPercent());
+        emit upd_signal(context->GetCountPercent());
 
         // tableView->setModel(nullptr);
         // delete fileModel;
@@ -102,6 +119,14 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
     */
 
     tableView->setRootIndex(fileModel->setRootPath(filePath));
+}
+
+void MainWindow::on_boxChanged(const QString &text)
+{
+    if(text == "Folder")
+        context->setStrategy(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
+    if(text == "File")
+        context->setStrategy(std::make_shared<formatStatistics>(), GetStatistics::FILE);
 }
 
 MainWindow::~MainWindow()

@@ -61,7 +61,8 @@ void FileExplorerModel::MoveIterator(QMapIterator<QString, QString> &i, int pos)
     }
 }
 
-void FileExplorerModel::UpdateMap(const QMap<QString, QString> &_map)
+void FileExplorerModel::UpdateMap(const QMap<QString, QString>* _map)
 {
-    map = _map;
+    if(_map)
+        map = *_map;
 }

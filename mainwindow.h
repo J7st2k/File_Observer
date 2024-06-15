@@ -7,6 +7,7 @@
 #include <QFileSystemModel>
 #include <QTreeView>
 #include <QTableView>
+#include <QComboBox>
 #include "getstatistics.h"
 #include "fileexplorermodel.h"
 
@@ -15,8 +16,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private slots:
     void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
+    void on_boxChanged(const QString& text);
 signals:
-    upd_signal(const QMap<QString, QString>& _map);
+    upd_signal(const QMap<QString, QString>* _map);
 public:
     MainWindow(QWidget *parent = 0, GetStatistics *_context = nullptr);
     ~MainWindow();
@@ -26,6 +28,7 @@ private:
     QTreeView *treeView;
     QTableView *tableView;
     GetStatistics *context;
+    QComboBox *box;
 
     void printMap(QMap<QString, QString>* map) {
         if(!map) return;

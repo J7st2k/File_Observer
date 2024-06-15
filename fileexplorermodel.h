@@ -18,7 +18,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const override;
 
 public slots:
-    void UpdateMap(const QMap<QString, QString>& _map);
+    void UpdateMap(const QMap<QString, QString>* _map);
 private:
     QMap<QString, QString> map;
 };
