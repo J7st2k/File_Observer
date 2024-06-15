@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
     // fileModel->setRootPath(homePath);
 
-    fileModel = new FileExplorerModel(this, context->GetCountPercent(2));
+    fileModel = new FileExplorerModel(this, context->GetCountPercent());
+    fileModel->setFilter(QDir::AllDirs);
     //Показать как дерево, пользуясь готовым видом:
 
     treeView = new QTreeView();
