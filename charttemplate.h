@@ -1,10 +1,9 @@
 #ifndef CHARTTEMPLATE_H
 #define CHARTTEMPLATE_H
 
-#include <QChart>
+#include <QtCharts>
 #include <QMap>
-#include <QBarSeries>
-#include <QBarSet>
+
 
 class ChartTemplate
 {
@@ -17,6 +16,12 @@ public:
 };
 
 class BarChart : public ChartTemplate
+{
+public:
+    QChart* drawChart(const QMap<QString, int>& map);
+};
+
+class PieChart : public ChartTemplate
 {
 public:
     QChart* drawChart(const QMap<QString, int>& map);

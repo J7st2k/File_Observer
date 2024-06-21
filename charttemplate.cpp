@@ -29,12 +29,36 @@ QChart *BarChart::drawChart(const QMap<QString, int>& map)
         barSets.push_back(new QBarSet(i.key(), chart));
         if(!barSets[k]) return chart;
         *barSets[k] << i.value();
+        k++;
     }
 
     QBarSeries *series = new QBarSeries(chart);
     if(!series) return chart;
     for(int j = 0; j < barSets.size(); j++) {
-        series->append(barSeries[j]);
+        series->append(barSets[j]);
+    }
+    chart->addSeries(series);
+
+    return chart;
+}
+
+
+QChart *PieChart::drawChart(const QMap<QString, int>& map)
+{
+    QChart *chart = new QChart();
+    if(!chart) return chart;
+    std::vector<QPieSlice*> pieSlice;
+    QMapIterator<QString, int> i(map);
+
+    while(i.hasNext()) {
+        i.next();
+        pieSlice.push_back(new QPieSlice(i.key(), i.value(), chart));
+    }
+
+    QPieSeries *series = new QPieSeries(chart);
+    if(!series) return chart;
+    for(int j = 0; j < pieSlice.size(); j++) {
+        series->append(pieSlice[j]);
     }
     chart->addSeries(series);
 

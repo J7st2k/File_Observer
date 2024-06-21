@@ -5,8 +5,11 @@
 #include <QTreeView>
 #include <QListView>
 #include <QHeaderView>
+#include <QMainWindow>
 #include "getstatistics.h"
 #include "mainwindow.h"
+#include "charttemplate.h"
+#include <QChartView>
 
 
 void printMap(const QMap<QString, int> map) {
@@ -37,7 +40,7 @@ void printMap(QMap<QString, QString>* map) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    // QString info;
+    QString info;
 
     //Папка пустая
     //info = QString("...\\File_Observer\\tests\\EmptyFolder");
@@ -54,8 +57,9 @@ int main(int argc, char *argv[])
     //Папка пустая и содержит вложения
     //info = QString("...\\File_Observer\\tests\\folderWithNothing");
 
+    info = QString("D:\\qt\\File_Observer\\tests\\Equal");
     GetStatistics g(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
-    // g.FillMap(info);
+    g.FillMap(info);
     // // std::cout << "Folders raw:\n";
     // // printMap(g.GetMap());
     // std::cout << "Folders percent:\n";
@@ -70,8 +74,14 @@ int main(int argc, char *argv[])
     // printMap(g.GetCountPercent());
 
     // g.setStrategy(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
-    MainWindow w(0, &g);
-    w.show();
 
+    //MainWindow w(0, &g);
+    //w.show();
+
+    QMainWindow window;
+    PieChart cc;
+    QChartView *chartView = new QChartView(cc.createChart(g.GetMap()));
+    window.setCentralWidget(chartView);
+    window.show();
     return a.exec();
 }
