@@ -1,8 +1,22 @@
 #include "fileexplorermodel.h"
 
-FileExplorerModel::FileExplorerModel(QObject *parent, QMap<QString, QString> *_map) : QFileSystemModel(parent)
+FileExplorerModel::FileExplorerModel(QObject *parent, QMap<QString, QString> *_map) : QAbstractItemModel(parent)
 {
     if(_map) map = *_map;
+}
+
+QModelIndex FileExplorerModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (hasIndex(row, column, parent)) {
+        return createIndex(row, column);
+    }
+    return QModelIndex();
+}
+
+QModelIndex FileExplorerModel::parent(const QModelIndex &child) const
+{
+    Q_UNUSED(child)
+    return QModelIndex();
 }
 
 int FileExplorerModel::columnCount(const QModelIndex &parent) const
@@ -38,13 +52,13 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
 
     if (!index.isValid() || map.size() <= index.row() || (role != Qt::DisplayRole && role != Qt::EditRole))
     {
-    return QVariant();
+        return QVariant();
     }
     if (map.isEmpty()) return QVariant();
     QMapIterator<QString, QString> i(map);
-    qDebug() << QString("indexes:  ") + QString::number(index.row()) + QString(" ") + QString::number(index.column());
+    //qDebug() << QString("indexes:  ") + QString::number(index.row()) + QString(" ") + QString::number(index.column());
     MoveIterator(i, index.row());
-        if (index.column() == 0) {
+    if (index.column() == 0) {
         return i.key();
     } else if (index.column() == 1) {
         return i.value();
@@ -63,6 +77,8 @@ void FileExplorerModel::MoveIterator(QMapIterator<QString, QString> &i, int pos)
 
 void FileExplorerModel::UpdateMap(const QMap<QString, QString>* _map)
 {
+    beginResetModel();
     if(_map)
         map = *_map;
+    endResetModel();
 }

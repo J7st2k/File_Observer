@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     // fileModel->setRootPath(homePath);
 
     fileModel = new FileExplorerModel(this, context->GetCountPercent());
-    fileModel->setFilter(QDir::AllDirs);
+
     //Показать как дерево, пользуясь готовым видом:
 
     treeView = new QTreeView();
@@ -101,24 +101,8 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
         emit upd_signal(context->GetCountPercent());
-
-        // tableView->setModel(nullptr);
-        // delete fileModel;
-        // fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
-        // tableView->setModel(fileModel);
-        // tableView->update();
-        //qDebug() << QString(dirModel->filePath(indexs.constFirst()));
-        //printMap(context->GetCountPercent(1));
     }
 
-    //TODO: !!!!!
-    /*
-    Тут простейшая обработка ширины первого столбца относительно длины названия папки.
-    Это для удобства, что бы при выборе папки имя полностью отображалась в  первом столбце.
-    Требуется доработка(переработка).
-    */
-
-    tableView->setRootIndex(fileModel->setRootPath(filePath));
 }
 
 void MainWindow::on_boxChanged(const QString &text)

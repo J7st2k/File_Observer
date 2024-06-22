@@ -51,7 +51,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
         while(i.hasNext()) {
             i.next();
             tmp = float(i.value())/total;
-            if (tmp*100 < border) {
+            if (tmp < border) {
                 othr += tmp;
                 flag = true;
             }
@@ -69,7 +69,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
             tmp = float(i.value())/total;
             if(tmp == 0)
                 _map->insert(i.key(), QString("0.00 \%"));
-            else if(tmp*100 < border)
+            else if(tmp < border)
                 _map->insert(i.key(), QString("<%1 \%").arg(QString::number(border)));
             else _map->insert(i.key(), QString("%1 \%").arg(QString::number(tmp*100, 'f', 2)));
         }
