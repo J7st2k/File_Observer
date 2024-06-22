@@ -16,7 +16,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private slots:
     void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-    void on_boxChanged(const QString& text);
+    void on_StratBoxChanged(const QString& text);
+    void on_ViewBoxChanged(const QString& text);
 signals:
     upd_signal(const QMap<QString, QString>* _map);
 public:
@@ -28,7 +29,8 @@ private:
     QTreeView *treeView;
     QTableView *tableView;
     GetStatistics *context;
-    QComboBox *box;
+    QComboBox *StratBox;
+    QComboBox *ViewBox;
 
     void printMap(QMap<QString, QString>* map) {
         if(!map) return;

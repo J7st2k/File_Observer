@@ -1,19 +1,16 @@
 #include "getstatistics.h"
 
 
-GetStatistics::GetStatistics(const std::shared_ptr<Statistics> &stat, StrategyType _type) {
+GetStatistics::GetStatistics(const std::shared_ptr<Statistics> &stat, const std::shared_ptr<MapTransformer>& mt) {
     if(!stat) throw std::runtime_error("Error in strategy pointer");
+    if(!mt) throw std::runtime_error("Error in transformer pointer");
     p = stat;
-    if(_type < 1) type = FILE;
-    else if (_type > 2) type = FOLDER;
-    else type = _type;
+    MT = mt;
 }
 
-void GetStatistics::setStrategy(const std::shared_ptr<Statistics> &stat, StrategyType _type) {
+void GetStatistics::setStrategy(const std::shared_ptr<Statistics> &stat, const std::shared_ptr<MapTransformer>& mt) {
     if(stat) p = stat;
-    if(_type < 1) type = FILE;
-    else if (_type > 2) type = FOLDER;
-    else type = _type;
+    if(mt) MT = mt;
 }
 
 void GetStatistics::FillMap(const QString& Core) {
@@ -51,7 +48,7 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
         while(i.hasNext()) {
             i.next();
             tmp = float(i.value())/total;
-            if (tmp*100 < border) {
+            if (tmp < border) {
                 othr += tmp;
                 flag = true;
             }
@@ -69,10 +66,20 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
             tmp = float(i.value())/total;
             if(tmp == 0)
                 _map->insert(i.key(), QString("0.00 \%"));
-            else if(tmp*100 < border)
+            else if(tmp < border)
                 _map->insert(i.key(), QString("<%1 \%").arg(QString::number(border)));
             else _map->insert(i.key(), QString("%1 \%").arg(QString::number(tmp*100, 'f', 2)));
         }
     }
     return _map;
+}
+
+QMap<QString, int> *GetStatistics::GetPercentAndSize(float border)
+{
+    return MT->GetPercentAndSize(map, border);
+}
+
+QMap<QString, QString> *GetStatistics::GetPercent(float border)
+{
+    return MT->GetPercent(map, border);
 }

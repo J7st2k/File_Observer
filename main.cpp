@@ -9,6 +9,7 @@
 #include "getstatistics.h"
 #include "mainwindow.h"
 #include "charttemplate.h"
+#include "maptransformer.h"
 #include <QChartView>
 
 
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
     //info = QString("...\\File_Observer\\tests\\folderWithNothing");
 
     info = QString("D:\\qt\\File_Observer\\tests\\Equal");
-    GetStatistics g(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
+    GetStatistics g(std::make_shared<fileStatistics>(), std::make_shared<FolderTransformer>());
     g.FillMap(info);
     // // std::cout << "Folders raw:\n";
     // // printMap(g.GetMap());
@@ -75,13 +76,13 @@ int main(int argc, char *argv[])
 
     // g.setStrategy(std::make_shared<fileStatistics>(), GetStatistics::FOLDER);
 
-    //MainWindow w(0, &g);
-    //w.show();
+    MainWindow w(0, &g);
+    w.show();
 
-    QMainWindow window;
-    PieChart cc;
-    QChartView *chartView = new QChartView(cc.createChart(g.GetMap()));
-    window.setCentralWidget(chartView);
-    window.show();
+    // QMainWindow window;
+    // PieChart cc;
+    // QChartView *chartView = new QChartView(cc.createChart(*g.GetPercentAndSize()));
+    // window.setCentralWidget(chartView);
+    // window.show();
     return a.exec();
 }

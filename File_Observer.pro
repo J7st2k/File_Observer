@@ -14,7 +14,8 @@ SOURCES += \
         fileexplorermodel.cpp \
         getstatistics.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        maptransformer.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -26,4 +27,5 @@ HEADERS += \
     charttemplate.h \
     fileexplorermodel.h \
     getstatistics.h \
-    mainwindow.h
+    mainwindow.h \
+    maptransformer.h
