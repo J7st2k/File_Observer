@@ -6,6 +6,7 @@
 #include <QFileSystemModel>
 #include <QItemSelectionModel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QTableView>
 #include <QHeaderView>
 #include <QStatusBar>
@@ -34,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     // fileModel->setRootPath(homePath);
 
     fileModel = new FileExplorerModel(this, context->GetPercent());
-    fileModel->setFilter(QDir::AllDirs);
+    //fileModel->setFilter(QDir::AllDirs);
     //Показать как дерево, пользуясь готовым видом:
 
     treeView = new QTreeView();
@@ -43,36 +44,34 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     StratBox = new QComboBox(parent);
     StratBox->addItem("Folder");
     StratBox->addItem("File");
-    //StratBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    StratBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
     ViewBox = new QComboBox(parent);
     ViewBox->addItem("Table");
     ViewBox->addItem("Bar");
     ViewBox->addItem("Pie");
-    //ViewBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    ViewBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
     treeView->expandAll();
-    QSplitter *hsplitter = new QSplitter(parent);
     tableView = new QTableView;
     tableView->setModel(fileModel);
-    hsplitter->addWidget(treeView);
-    hsplitter->addWidget(tableView);
 
-    QSplitter *boxsplitter = new QSplitter(parent);
-    boxsplitter->addWidget(StratBox);
-    boxsplitter->addWidget(ViewBox);
+    QVBoxLayout* v1Layout = new QVBoxLayout(parent);
+    v1Layout->addWidget(StratBox);
+    v1Layout->addWidget(treeView);
 
-    QSplitter *vsplitter = new QSplitter(Qt::Vertical, parent);
-    vsplitter->addWidget(boxsplitter);
-    vsplitter->addWidget(hsplitter);
+    QVBoxLayout* v2Layout = new QVBoxLayout(parent);
+    v2Layout->addWidget(ViewBox);
+    v2Layout->addWidget(tableView);
 
+    QHBoxLayout* h1Layout = new QHBoxLayout(parent);
+    h1Layout->addLayout(v1Layout);
+    h1Layout->addLayout(v2Layout);
 
-    // QVBoxLayout* layout = new QVBoxLayout(this);
-    // layout->addWidget(box);
-    // layout->addWidget(splitter);
-    // layout->addStretch();
+    QWidget* win = new QWidget();
+    win->setLayout(h1Layout);
 
-    setCentralWidget(vsplitter);
+    setCentralWidget(win);
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
 
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
     QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
-    QObject::connect(StratBox, &QComboBox::currentTextChanged, this, &MainWindow::on_boxChanged);
+    QObject::connect(StratBox, &QComboBox::currentTextChanged, this, &MainWindow::on_StratBoxChanged);
     //Пример организации установки курсора в TreeView относительно модельного индекса
     QItemSelection toggleSelection;
     QModelIndex topLeft;
@@ -117,8 +116,8 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         // fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
         // tableView->setModel(fileModel);
         // tableView->update();
-        //qDebug() << QString(dirModel->filePath(indexs.constFirst()));
-        //printMap(context->GetCountPercent(1));
+        // qDebug() << QString(dirModel->filePath(indexs.constFirst()));
+        // printMap(context->GetCountPercent(1));
     }
 
     //TODO: !!!!!
@@ -128,7 +127,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
     Требуется доработка(переработка).
     */
 
-    tableView->setRootIndex(fileModel->setRootPath(filePath));
+    //tableView->setRootIndex(fileModel->setRootPath(filePath));
 }
 
 void MainWindow::on_StratBoxChanged(const QString &text)
@@ -139,7 +138,7 @@ void MainWindow::on_StratBoxChanged(const QString &text)
         context->setStrategy(std::make_shared<formatStatistics>(), std::make_shared<FileTransformer>());
 }
 
-void MainWindow::on_StratBoxChanged(const QString &text)
+void MainWindow::on_ViewBoxChanged(const QString &text)
 {
     if(text == "Folder")
         context->setStrategy(std::make_shared<fileStatistics>(), std::make_shared<FolderTransformer>());
