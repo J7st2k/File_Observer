@@ -56,7 +56,7 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
     }
     if (map.isEmpty()) return QVariant();
     QMapIterator<QString, QString> i(map);
-    //qDebug() << QString("indexes:  ") + QString::number(index.row()) + QString(" ") + QString::number(index.column());
+
     MoveIterator(i, index.row());
         if (index.column() == 0) {
         return i.key();

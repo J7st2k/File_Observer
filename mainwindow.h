@@ -19,22 +19,18 @@ private slots:
     void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
     void on_StratBoxChanged(const QString& text);
     void on_ViewBoxChanged(const QString& text);
-signals:
-    upd_signal(const QMap<QString, QString>* _map);
 public:
     MainWindow(QWidget *parent = 0, GetStatistics *_context = nullptr);
     ~MainWindow();
 private:
-    FileExplorerModel *fileModel;
     QFileSystemModel *dirModel;
     QTreeView *treeView;
-    QTableView *tableView;
     GetStatistics *context;
     QComboBox *StratBox;
     QComboBox *ViewBox;
+
     QWidget *View;
     IAdapter *adapter;
-
     QVBoxLayout* v2Layout;
 
     void printMap(QMap<QString, QString>* map) {

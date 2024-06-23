@@ -44,8 +44,8 @@ QMap<QString, QString> *FolderTransformer::GetPercent(const QMap<QString, int> &
         tmp = float(i.value())/total;
         if(tmp == 0)
             _map->insert(i.key(), QString("0.00 \%"));
-        else if(tmp < border)
-            _map->insert(i.key(), QString("<%1 \%").arg(QString::number(border)));
+        else if(tmp*100 < border)
+            _map->insert(i.key(), QString("less than %1 \%").arg(QString::number(border)));
         else _map->insert(i.key(), QString("%1 \%").arg(QString::number(tmp*100, 'f', 2)));
     }
 
@@ -98,7 +98,7 @@ QMap<QString, QString> *FileTransformer::GetPercent(const QMap<QString, int> &ma
     while(i.hasNext()) {
         i.next();
         tmp = float(i.value())/total;
-        if (tmp < border) {
+        if (tmp*100 < border) {
             othr += tmp;
             flag = true;
         }
