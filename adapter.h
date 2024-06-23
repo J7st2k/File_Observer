@@ -30,13 +30,17 @@ class PieChartAdapter : public IAdapter
     QChartView *chartView;
 public:
     PieChartAdapter();
+    ~PieChartAdapter();
     void UpdateView(const GetStatistics* context, QVBoxLayout* layout, QWidget* wid);
 };
 
-class TableChartAdapter : public IAdapter
+class BarChartAdapter : public IAdapter
 {
+    QChart *chart;
+    QChartView *chartView;
 public:
-    TableChartAdapter();
+    BarChartAdapter();
+    ~BarChartAdapter();
     void UpdateView(const GetStatistics* context, QVBoxLayout* layout, QWidget* wid);
 };
 

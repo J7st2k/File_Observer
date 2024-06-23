@@ -55,10 +55,10 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     treeView->expandAll();
 
     adapter = new TableAdapter();
-    //View = new QWidget();
-
-    tableView = new QTableView(this);
-    tableView->setModel(fileModel);
+    // View = new QWidget();
+    // View->setVisible(false);
+    // tableView = new QTableView(this);
+    // tableView->setModel(fileModel);
 
     QVBoxLayout* v1Layout = new QVBoxLayout(parent);
     v1Layout->addWidget(StratBox);
@@ -66,8 +66,9 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
     v2Layout = new QVBoxLayout(parent);
     v2Layout->addWidget(ViewBox);
-    v2Layout->addWidget(tableView);
+    //v2Layout->addWidget(tableView);
     //v2Layout->addWidget(View);
+    //v2Layout->addStretch();
 
     QHBoxLayout* h1Layout = new QHBoxLayout(parent);
     h1Layout->addLayout(v1Layout);
@@ -82,11 +83,12 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
 
     treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    //tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
-    QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
+    //QObject::connect(this, &MainWindow::upd_signal, fileModel, &FileExplorerModel::UpdateMap);
     QObject::connect(StratBox, &QComboBox::currentTextChanged, this, &MainWindow::on_StratBoxChanged);
+    QObject::connect(ViewBox, &QComboBox::currentTextChanged, this, &MainWindow::on_ViewBoxChanged);
     //Пример организации установки курсора в TreeView относительно модельного индекса
     QItemSelection toggleSelection;
     QModelIndex topLeft;
@@ -114,7 +116,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         filePath = dirModel->filePath(ix);
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
-        emit upd_signal(context->GetPercent());
+        //emit upd_signal(context->GetPercent());
         adapter->UpdateView(context, v2Layout, View);
         // tableView->setModel(nullptr);
         // delete fileModel;
@@ -137,18 +139,33 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 
 void MainWindow::on_StratBoxChanged(const QString &text)
 {
-    if(text == "Folder")
+    if(text == "Folder") {
         context->setStrategy(std::make_shared<fileStatistics>(), std::make_shared<FolderTransformer>());
-    if(text == "File")
+        on_selectionChangedSlot(treeView->selectionModel()->selection(), treeView->selectionModel()->selection());
+    }
+    if(text == "File") {
         context->setStrategy(std::make_shared<formatStatistics>(), std::make_shared<FileTransformer>());
+        on_selectionChangedSlot(treeView->selectionModel()->selection(), treeView->selectionModel()->selection());
+    }
 }
 
 void MainWindow::on_ViewBoxChanged(const QString &text)
 {
-    if(text == "Folder")
-        context->setStrategy(std::make_shared<fileStatistics>(), std::make_shared<FolderTransformer>());
-    if(text == "File")
-        context->setStrategy(std::make_shared<formatStatistics>(), std::make_shared<FileTransformer>());
+    if(text == "Table") {
+        delete adapter;
+        adapter = new TableAdapter();
+        on_selectionChangedSlot(treeView->selectionModel()->selection(), treeView->selectionModel()->selection());
+    }
+    if(text == "Bar") {
+        delete adapter;
+        adapter = new BarChartAdapter();
+        on_selectionChangedSlot(treeView->selectionModel()->selection(), treeView->selectionModel()->selection());
+    }
+    if(text == "Pie") {
+        delete adapter;
+        adapter = new PieChartAdapter();
+        on_selectionChangedSlot(treeView->selectionModel()->selection(), treeView->selectionModel()->selection());
+    }
 }
 
 MainWindow::~MainWindow()

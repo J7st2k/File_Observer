@@ -14,6 +14,7 @@ void ChartTemplate::drawLegend(QChart *chart)
 {
     chart->legend()->setVisible(true);
     chart->legend()->setAlignment(Qt::AlignRight);
+    chart->legend()->adjustSize();
 }
 
 QChart *BarChart::drawChart(const QMap<QString, int>& map)

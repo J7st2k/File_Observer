@@ -7,8 +7,6 @@
 
 class FileExplorerModel: public QAbstractItemModel
 {
-    Q_OBJECT
-
     void MoveIterator(QMapIterator<QString, QString>& i, int pos) const;
 public:
     FileExplorerModel(QObject *parent = nullptr);
@@ -19,7 +17,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
-public slots:
     void UpdateMap(const QMap<QString, QString>* _map);
 private:
     QMap<QString, QString> map;

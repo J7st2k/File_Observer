@@ -13,7 +13,7 @@ QMap<QString, int> *FolderTransformer::GetPercentAndSize(const QMap<QString, int
     QMapIterator<QString, int> i(map);
     while(i.hasNext()) {
         i.next();
-        res->insert(i.key() + QString(" (") + _map->value(i.key()) + QString(")"), i.value());
+        res->insert(QString("%1 (%2)").arg(i.key()).arg(_map->value(i.key())), i.value());
     }
 
     delete _map;
@@ -54,6 +54,7 @@ QMap<QString, QString> *FolderTransformer::GetPercent(const QMap<QString, int> &
 
 QMap<QString, int> *FileTransformer::GetPercentAndSize(const QMap<QString, int> &map, float border)
 {
+    int otr = 0;
     QMap<QString, int>* res = new QMap<QString, int>;
     if(!res) return res;
     QMap<QString, QString>* _map = GetPercent(map, border);
@@ -62,9 +63,11 @@ QMap<QString, int> *FileTransformer::GetPercentAndSize(const QMap<QString, int> 
     QMapIterator<QString, int> i(map);
     while(i.hasNext()) {
         i.next();
-        res->insert(i.key() + QString(" (") + _map->value(i.key()) + QString(")"), i.value());
+        if(_map->contains("*." + i.key()))
+            res->insert(QString("*.") + i.key() + QString(" (") + _map->value("*." + i.key()) + QString(")"), i.value());
+        else otr += i.value();
     }
-
+    res->insert("Others (" + _map->value("Others") + ")", otr);
     delete _map;
     return res;
 }
