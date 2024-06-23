@@ -74,12 +74,12 @@ QMap<QString, QString> *GetStatistics::GetCountPercent(float border) {
     return _map;
 }
 
-QMap<QString, int> *GetStatistics::GetPercentAndSize(float border)
+QMap<QString, int> *GetStatistics::GetPercentAndSize(float border) const
 {
     return MT->GetPercentAndSize(map, border);
 }
 
-QMap<QString, QString> *GetStatistics::GetPercent(float border)
+QMap<QString, QString> *GetStatistics::GetPercent(float border) const
 {
     return MT->GetPercent(map, border);
 }

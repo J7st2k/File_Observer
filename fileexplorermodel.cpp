@@ -1,8 +1,8 @@
 #include "fileexplorermodel.h"
 
-FileExplorerModel::FileExplorerModel(QObject *parent, QMap<QString, QString> *_map) : QAbstractItemModel(parent)
+FileExplorerModel::FileExplorerModel(QObject *parent) : QAbstractItemModel(parent)
 {
-    if(_map) map = *_map;
+
 }
 
 QModelIndex FileExplorerModel::index(int row, int column, const QModelIndex &parent) const
@@ -63,6 +63,7 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
     } else if (index.column() == 1) {
         return i.value();
     }
+    return QVariant();
 }
 
 void FileExplorerModel::MoveIterator(QMapIterator<QString, QString> &i, int pos) const

@@ -20,8 +20,8 @@ public:
     void FillMap(const QString& Core);
     const QMap<QString, int>& GetMap();
     QMap<QString, QString>* GetCountPercent(float border = 0.01);
-    QMap<QString, int>* GetPercentAndSize(float border = 0.01);
-    QMap<QString, QString>* GetPercent(float border = 0.01);
+    QMap<QString, int>* GetPercentAndSize(float border = 0.01) const;
+    QMap<QString, QString>* GetPercent(float border = 0.01) const;
 private:
     std::shared_ptr<Statistics> p;
     StrategyType type;

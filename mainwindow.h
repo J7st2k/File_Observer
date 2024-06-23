@@ -10,6 +10,7 @@
 #include <QComboBox>
 #include "getstatistics.h"
 #include "fileexplorermodel.h"
+#include "adapter.h"
 
 class MainWindow : public QMainWindow
 {
@@ -31,6 +32,10 @@ private:
     GetStatistics *context;
     QComboBox *StratBox;
     QComboBox *ViewBox;
+    QWidget *View;
+    IAdapter *adapter;
+
+    QVBoxLayout* v2Layout;
 
     void printMap(QMap<QString, QString>* map) {
         if(!map) return;

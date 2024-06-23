@@ -11,7 +11,7 @@ class FileExplorerModel: public QAbstractItemModel
 
     void MoveIterator(QMapIterator<QString, QString>& i, int pos) const;
 public:
-    FileExplorerModel(QObject *parent = nullptr, QMap<QString, QString> *_map = nullptr);
+    FileExplorerModel(QObject *parent = nullptr);
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     int columnCount(const QModelIndex &parent) const override;

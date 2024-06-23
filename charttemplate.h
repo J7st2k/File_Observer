@@ -9,7 +9,7 @@ class ChartTemplate
 {
 public:
     ChartTemplate();
-    ~ChartTemplate() = default;
+    virtual ~ChartTemplate() = default;
     QChart* createChart(const QMap<QString, int>& map);
     virtual QChart* drawChart(const QMap<QString, int>& map) = 0;
     void drawLegend(QChart*);

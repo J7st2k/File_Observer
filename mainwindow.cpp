@@ -34,11 +34,11 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
 
     // fileModel->setRootPath(homePath);
 
-    fileModel = new FileExplorerModel(this, context->GetPercent());
+    fileModel = new FileExplorerModel(this);
     //fileModel->setFilter(QDir::AllDirs);
     //Показать как дерево, пользуясь готовым видом:
 
-    treeView = new QTreeView();
+    treeView = new QTreeView(this);
     treeView->setModel(dirModel);
 
     StratBox = new QComboBox(parent);
@@ -53,16 +53,21 @@ MainWindow::MainWindow(QWidget *parent, GetStatistics *_context)
     ViewBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
     treeView->expandAll();
-    tableView = new QTableView;
+
+    adapter = new TableAdapter();
+    //View = new QWidget();
+
+    tableView = new QTableView(this);
     tableView->setModel(fileModel);
 
     QVBoxLayout* v1Layout = new QVBoxLayout(parent);
     v1Layout->addWidget(StratBox);
     v1Layout->addWidget(treeView);
 
-    QVBoxLayout* v2Layout = new QVBoxLayout(parent);
+    v2Layout = new QVBoxLayout(parent);
     v2Layout->addWidget(ViewBox);
     v2Layout->addWidget(tableView);
+    //v2Layout->addWidget(View);
 
     QHBoxLayout* h1Layout = new QHBoxLayout(parent);
     h1Layout->addLayout(v1Layout);
@@ -110,7 +115,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
         this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
         context->FillMap(dirModel->filePath(indexs.constFirst()));
         emit upd_signal(context->GetPercent());
-
+        adapter->UpdateView(context, v2Layout, View);
         // tableView->setModel(nullptr);
         // delete fileModel;
         // fileModel = new FileExplorerModel(this, context->GetCountPercent(1));
