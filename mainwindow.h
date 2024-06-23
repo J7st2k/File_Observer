@@ -10,25 +10,28 @@
 #include <QComboBox>
 #include "getstatistics.h"
 #include "fileexplorermodel.h"
+#include "adapter.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private slots:
     void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-    void on_boxChanged(const QString& text);
-signals:
-    upd_signal(const QMap<QString, QString>* _map);
+    void on_StratBoxChanged(const QString& text);
+    void on_ViewBoxChanged(const QString& text);
 public:
     MainWindow(QWidget *parent = 0, GetStatistics *_context = nullptr);
     ~MainWindow();
 private:
-    FileExplorerModel *fileModel;
     QFileSystemModel *dirModel;
     QTreeView *treeView;
-    QTableView *tableView;
     GetStatistics *context;
-    QComboBox *box;
+    QComboBox *StratBox;
+    QComboBox *ViewBox;
+
+    QWidget *View;
+    IAdapter *adapter;
+    QVBoxLayout* v2Layout;
 
     void printMap(QMap<QString, QString>* map) {
         if(!map) return;

@@ -1,5 +1,6 @@
 QT = core
 QT += widgets
+QT += charts
 
 CONFIG += c++17 cmdline
 
@@ -9,10 +10,13 @@ CONFIG += c++17 cmdline
 
 SOURCES += \
         Statistics.cpp \
+        adapter.cpp \
+        charttemplate.cpp \
         fileexplorermodel.cpp \
         getstatistics.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        maptransformer.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -21,6 +25,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Statistics.h \
+    adapter.h \
+    charttemplate.h \
     fileexplorermodel.h \
     getstatistics.h \
-    mainwindow.h
+    mainwindow.h \
+    maptransformer.h
