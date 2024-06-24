@@ -67,7 +67,8 @@ QMap<QString, int> *FileTransformer::GetPercentAndSize(const QMap<QString, int> 
             res->insert(QString("*.") + i.key() + QString(" (") + _map->value("*." + i.key()) + QString(")"), i.value());
         else otr += i.value();
     }
-    res->insert("Others (" + _map->value("Others") + ")", otr);
+    if(_map->contains("Others"))
+        res->insert("Others (" + _map->value("Others") + ")", otr);
     delete _map;
     return res;
 }
